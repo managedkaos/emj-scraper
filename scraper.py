@@ -35,9 +35,6 @@ skip = [
     'Proceedings Review',
     'Proceedings Reviews']
 
-# A dataframe to hold the results
-df = pd.DataFrame(columns=['Article', 'Issue'])
-
 # loop over the range for the volume ID
 for volume in range(first_volume, last_volume+1):
 
