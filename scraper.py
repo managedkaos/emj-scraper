@@ -68,18 +68,25 @@ for volume in range(first_volume, last_volume+1):
 
         # get all the articles in the issue
         articles = soup.find_all('div', {'class': 'art_title'})
+        log.warning(f"Found {len(articles)} articles...")
+        article_counter = 0
 
         # get the href and text of each article div
         for article in articles:
-
             links = article.findChildren("a", href=True)
 
             for link in links:
                 article_title = link.text
                 article_url = f"https://www.tandfonline.com{link['href']}"
+                article_counter = article_counter + 1
+                log.warning(f"{article_counter}: {article_title}")
 
             # skip any article titles that are uninteresting
             if article_title in skip:
+                continue
+
+            if next((sub for sub in article_list if sub['url'] == article_url), None):
+                log.warning(f"Skipping {article_title}")
                 continue
 
             article_list.extend(

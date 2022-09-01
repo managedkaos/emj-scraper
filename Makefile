@@ -1,7 +1,7 @@
 all: scraper
 
 scraper:
-	python ./scraper.py | tee ./public/index.html
+	python ./scraper.py > ./public/index.html
 
 requirements:
 	pip install -U pip
