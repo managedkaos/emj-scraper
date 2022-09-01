@@ -51,14 +51,12 @@
                                 <thead>
                                     <tr>
                                         <th>Article Title</th>
-                                        <th>Journal Issue</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 {% for article in article_list %}
                                 <tr>
                                     <td><a href="{{article.url}}">{{ article.title }}</a></td>
-                                    <td><a href="{{article.issue_url}}">{{ article.issue_title }}</a></td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>

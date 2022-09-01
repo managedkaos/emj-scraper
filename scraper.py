@@ -83,9 +83,11 @@ for volume in range(first_volume, last_volume+1):
 
             # skip any article titles that are uninteresting
             if article_title in skip:
+                log.warning(f"Skipping {article_title}")
                 continue
 
-            if next((sub for sub in article_list if sub['url'] == article_url), None):
+            # skip any article that is already in the list
+            if next((existing for existing in article_list if existing['url'] == article_url), None):
                 log.warning(f"Skipping {article_title}")
                 continue
 
