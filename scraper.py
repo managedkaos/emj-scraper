@@ -4,7 +4,6 @@ A BS scraper for Engineering Management Journal on https://www.tandfonline.com
 from bs4 import BeautifulSoup
 from datetime import date
 
-import pandas as pd
 import requests
 import logging
 import jinja2
@@ -98,18 +97,10 @@ for volume in range(first_volume, last_volume+1):
                 'issue_title': issue_title
             }])
 
-            # Add the article title and URL to the dataframe
-            df.loc[len(df)] = [
-                f"<a href='{article_url}' target='_blank'>{article_title}</a>",
-                f"<a href='{issue_url}' target='_blank'>{issue_title}</a>"]
-
-# print the dataframe as HTML
-# print(df.to_html(escape=False))
-
 # open text file in read mode
 environment = jinja2.Environment()
 template = environment.from_string(open("index.j2", "r").read())
 rendered_template = template.render(article_list=article_list,
-    title="EMJ", date=date.today().strftime('%A, %B  %d, %Y at %X %Z'))
+    title="EMJ Articles", date=date.today().strftime('%A, %B  %d, %Y'))
 
 print(rendered_template)
