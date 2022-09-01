@@ -68,7 +68,6 @@ for volume in range(first_volume, last_volume+1):
 
         # get all the articles in the issue
         articles = soup.find_all('div', {'class': 'art_title'})
-        log.warning(articles)
 
         # get the href and text of each article div
         for article in articles:
