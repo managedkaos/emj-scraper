@@ -14,7 +14,7 @@ logging.basicConfig(format='%(message)s')
 log = logging.getLogger(__name__)
 
 # Variables for the first and last volume to consider
-first_volume = 34
+first_volume = 27
 last_volume = 34
 
 article_list = []
@@ -67,14 +67,20 @@ for volume in range(first_volume, last_volume+1):
         log.warning(f"Found {len(articles)} articles...")
         article_counter = 0
 
+        # get all the article publish dates
+        tocEPubDate = soup.find_all('div', {'class': 'tocEPubDate'})
+        log.warning(f"Found {len(tocEPubDate)} tocEPubDates...")
+
         # get the href and text of each article div
-        for article in articles:
+        for i, article in enumerate(articles[0:len(tocEPubDate)]):
             links = article.findChildren("a", href=True)
+            article_date = tocEPubDate[i] # this will break
 
             for link in links:
                 article_title = link.text
                 article_url = f"https://www.tandfonline.com{link['href']}"
                 article_counter = article_counter + 1
+
                 log.warning(f"{article_counter}: {article_title}")
 
             # skip any article titles that are uninteresting
@@ -90,6 +96,7 @@ for volume in range(first_volume, last_volume+1):
             article_list.extend(
                 [{'url': article_url,
                 'title': article_title,
+                'date': article_date,
                 'issue_url': issue_url,
                 'issue_title': issue_title
             }])

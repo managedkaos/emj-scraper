@@ -50,13 +50,15 @@
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th>Article Title</th>
+                                        <th>Title</th>
+                                        <th>Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 {% for article in article_list %}
                                 <tr>
                                     <td><a href="{{article.url}}">{{ article.title }}</a></td>
+                                    <td>{{ article.date }}</td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>
