@@ -3,6 +3,7 @@ A BS scraper for Engineering Management Journal on https://www.tandfonline.com
 '''
 from bs4 import BeautifulSoup
 from datetime import date
+import lxml.html
 
 import pandas as pd
 import requests
@@ -61,55 +62,26 @@ for volume in range(first_volume, last_volume+1):
 
         # parse the HTML into soup
         soup = BeautifulSoup(html, features="html.parser")
+        tree = lxml.html.fromstring(response.content)
+        issue_titles = tree.xpath('//div[@title="toc-title"]/text()')
+        log.warning(issue_titles)
+
+        continue
 
         # Get the title of the issue (only one is needed)
         issue_titles = soup.find_all("div", {"class": "toc-title"})
         issue_title = issue_titles[0].get_text()
 
         # get all the articles in the issue
-        articles = soup.find_all('div', {'class': 'art_title'})
+        articles = soup.find_all('div', {'class': 'tocArticleEntry'})
         log.warning(f"Found {len(articles)} articles...")
         article_counter = 0
-
-        # get the href and text of each article div
-        for article in articles:
-            links = article.findChildren("a", href=True)
-
-            for link in links:
-                article_title = link.text
-                article_url = f"https://www.tandfonline.com{link['href']}"
-                article_counter = article_counter + 1
-                log.warning(f"{article_counter}: {article_title}")
-
-            # skip any article titles that are uninteresting
-            if article_title in skip:
-                log.warning(f"Skipping {article_title}")
-                continue
-
-            # skip any article that is already in the list
-            if next((existing for existing in article_list if existing['url'] == article_url), None):
-                log.warning(f"Skipping {article_title}")
-                continue
-
-            article_list.extend(
-                [{'url': article_url,
-                'title': article_title,
-                'issue_url': issue_url,
-                'issue_title': issue_title
-            }])
-
-            # Add the article title and URL to the dataframe
-            df.loc[len(df)] = [
-                f"<a href='{article_url}' target='_blank'>{article_title}</a>",
-                f"<a href='{issue_url}' target='_blank'>{issue_title}</a>"]
-
-# print the dataframe as HTML
-# print(df.to_html(escape=False))
+        article_list.extend(articles)
 
 # open text file in read mode
-environment = jinja2.Environment()
-template = environment.from_string(open("index.j2", "r").read())
-rendered_template = template.render(article_list=article_list,
-    title="EMJ", date=date.today().strftime('%A, %B  %d, %Y at %X %Z'))
+#environment = jinja2.Environment()
+#template = environment.from_string(open("index.j2", "r").read())
+#rendered_template = template.render(articles=articles,
+#    title="EMJ", date=date.today().strftime('%A, %B  %d, %Y at %X %Z'))
 
-print(rendered_template)
+#print(rendered_template)
