@@ -1,4 +1,4 @@
-all: scraper
+all: requirements scraper
 
 scraper:
 	python ./scraper.py > ./public/index.html
