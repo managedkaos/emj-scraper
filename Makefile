@@ -4,7 +4,7 @@ scraper:
 all: requirements lint scraper
 
 requirements:
-	pip install -U pip
+	pip install -U pip flake8
 	pip install --requirement requirements.txt
 
 lint:

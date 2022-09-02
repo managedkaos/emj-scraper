@@ -1,5 +1,4 @@
 bs4
-pandas
 requests
 tabulate
 jinja2
