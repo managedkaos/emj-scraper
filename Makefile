@@ -8,7 +8,7 @@ requirements:
 	pip install --requirement requirements.txt
 
 lint:
-	echo 'Linting coming soon! :D'
+	flake8 --ignore=E124,E128,E501
 
 open:
 	open ./public/index.html

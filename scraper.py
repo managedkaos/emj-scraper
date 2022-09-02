@@ -44,7 +44,7 @@ skip = [
     'Reviewer Thank You']
 
 # loop over the range for the volume ID
-for volume in range(first_volume, last_volume+1):
+for volume in range(first_volume, last_volume + 1):
 
     # loop over each issue in each volume (at most, there are four issues)
     for issue in range(1, 5):
@@ -85,7 +85,7 @@ for volume in range(first_volume, last_volume+1):
 
             # clean up the article date
             date_soup = BeautifulSoup(str(tocEPubDate[i]), features="html.parser")
-            date_span = date_soup.find("span",  {"class": "date"})
+            date_span = date_soup.find("span", {"class": "date"})
             article_date = datetime.strptime(date_span.text.strip(), '%d %b %Y').date()
 
             for link in links:
