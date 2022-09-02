@@ -21,9 +21,17 @@ article_list = []
 
 # A list of TOC entries that are not interesting
 skip = [
+    'Call for Papers',
+    '2004 ASEM Conference',
+    '2005 ASEM Conference Announcement',
+    "Manager's Casebook",
+    "CEO's Corner",
+    "Editors’ Introduction",
     'Editorial Board',
     'From the Editor',
     'From the Editors',
+    'From the Special Issue Editor',
+    'From the Incoming Editor',
     'Announcements',
     'Book Review',
     'Book Reviews',
