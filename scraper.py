@@ -14,7 +14,7 @@ logging.basicConfig(format='%(message)s')
 log = logging.getLogger(__name__)
 
 # Variables for the first and last volume to consider
-first_volume = 34
+first_volume = 1
 last_volume = 34
 
 article_list = []
