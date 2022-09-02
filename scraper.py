@@ -2,7 +2,7 @@
 A BS scraper for Engineering Management Journal on https://www.tandfonline.com
 '''
 from bs4 import BeautifulSoup
-from datetime import date
+from datetime import date, datetime
 
 import requests
 import logging
@@ -14,7 +14,7 @@ logging.basicConfig(format='%(message)s')
 log = logging.getLogger(__name__)
 
 # Variables for the first and last volume to consider
-first_volume = 27
+first_volume = 34
 last_volume = 34
 
 article_list = []
@@ -33,7 +33,15 @@ skip = [
     'Dissertation Reviews',
     'Special Thanks',
     'Proceedings Review',
-    'Proceedings Reviews']
+    'Proceedings Reviews',
+    '2016 Reviewer Thank You',
+    '2014 Engineering Management Dissertation Review',
+    'Acknowledgement',
+    'Editorial Board EOV',
+    'Editor’s Introduction for the March 2022 Issue',
+    'From the Special Issue Editors',
+    'From the Editors and Special Issue Editors',
+    'Reviewer Thank You']
 
 # loop over the range for the volume ID
 for volume in range(first_volume, last_volume+1):
@@ -64,33 +72,37 @@ for volume in range(first_volume, last_volume+1):
 
         # get all the articles in the issue
         articles = soup.find_all('div', {'class': 'art_title'})
-        log.warning(f"Found {len(articles)} articles...")
+        log.warning(f"\tFound {len(articles)} articles...")
         article_counter = 0
 
         # get all the article publish dates
         tocEPubDate = soup.find_all('div', {'class': 'tocEPubDate'})
-        log.warning(f"Found {len(tocEPubDate)} tocEPubDates...")
+        log.warning(f"\tFound {len(tocEPubDate)} tocEPubDates...")
 
         # get the href and text of each article div
         for i, article in enumerate(articles[0:len(tocEPubDate)]):
             links = article.findChildren("a", href=True)
-            article_date = tocEPubDate[i] # this will break
+
+            # clean up the article date
+            date_soup = BeautifulSoup(str(tocEPubDate[i]), features="html.parser")
+            date_span = date_soup.find("span",  {"class": "date"})
+            article_date = datetime.strptime(date_span.text.strip(), '%d %b %Y').date()
 
             for link in links:
                 article_title = link.text
                 article_url = f"https://www.tandfonline.com{link['href']}"
                 article_counter = article_counter + 1
 
-                log.warning(f"{article_counter}: {article_title}")
+                log.warning(f"\t{article_counter}: {article_title}")
 
             # skip any article titles that are uninteresting
             if article_title in skip:
-                log.warning(f"Skipping {article_title}")
+                log.warning(f"\tSkipping {article_title}")
                 continue
 
             # skip any article that is already in the list
             if next((existing for existing in article_list if existing['url'] == article_url), None):
-                log.warning(f"Skipping {article_title}")
+                log.warning(f"\tSkipping {article_title}")
                 continue
 
             article_list.extend(
